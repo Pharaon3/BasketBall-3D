@@ -5,12 +5,12 @@ var gameType= new Array()
 var newEvents = new Array()
 var lastEvents = new Array()
 var awayteamname, hometeamname
-var homeScore, awayScore
+var homeScore, awayScore, periodlength, getDataTime
 var teamNames = new Array()
 const equals = (a, b) => JSON.stringify(a) === JSON.stringify(b)
 function getJsonData() {
   fetch(
-    'https://lmt.fn.sportradar.com/demolmt/en/Etc:UTC/gismo/match_timelinedelta/36494191',
+    'https://lmt.fn.sportradar.com/demolmt/en/Etc:UTC/gismo/match_timelinedelta/37564415',
   )
     .then((res) => {
       return res.json()
@@ -23,6 +23,9 @@ function getJsonData() {
       var match = data_['match']
       // Team Name Setting
       var teams = match['teams']
+      periodlength = match['periodlength']
+      getDataTime = match['timeinfo']['remaining'] * 1000
+      setTimer = match['timeinfo']['running']
       var hometeam = teams['home']
       if (hometeam['name']) hometeamname = hometeam['name']
       // document.getElementById('homeNameLabel').textContent = hometeamname
@@ -133,22 +136,26 @@ function getJsonData() {
               newEvents.push(events2)
           } else;
         }
-        // if (event['type'] == 'free_throws_awarded') {
-        //   let events0 = new Array()
-        //   if(event['team'] == 'home'){
-        //     events0['X'] = 80
-        //   }
-        //   else if (event['team'] == 'away'){
-        //     events0['X'] = 20
-        //   }
-        //   events0['Y'] = 50
-        //   events0['team'] = event['team']
-        //   events0['type'] = event['type']
-        //   events0['name'] = event['name']
-        //   events0['uts'] = event['uts']
-        //   events0['seconds'] = event['seconds']
-        //   newEvents.push(events0)
-        // }
+        if (event['type'] == 'free_throws_awarded') {
+          if (event['team'] == 'home') {
+            events1 = {X: '80', Y: '50'}
+              events1['team'] = 'home'
+              events1['type'] = 'free_throws_awarded'
+              events1['name'] = event['name']
+              events1['uts'] = event['uts']
+              events1['seconds'] = event['seconds']
+              newEvents.push(events1)
+          } else if (event['team'] == 'away') {
+            events1 = {X: '20', Y: '50'}
+              events1['team'] = 'away'
+              events1['type'] = 'free_throws_awarded'
+              events1['name'] = event['name']
+              events1['uts'] = event['uts']
+              events1['seconds'] = event['seconds']
+              newEvents.push(events1)
+          } else;
+        }
+        
         if (event['type'] == 'ballcoordinates') {
           var coordinates = event['coordinates']
           var tmpCoordinate = new Array()

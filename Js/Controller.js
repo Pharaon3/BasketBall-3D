@@ -80,6 +80,7 @@ function countdown() {
       displayState()
       if (x2 == x1 && y2 == y1) {
         bounceBall()
+        if(gameState[currentState]['type'] == 'goal' || gameState[currentState]['type'] == 'attempt_missed') kickBall();
       } else {
         if(gameState[currentState]['type']){
           bounceBall();
@@ -92,7 +93,7 @@ function countdown() {
       // drawTrack()
       showState()
     }
-    if(setTimer == 1) time += timeInterval;
+    if(setTimer == false) time -= timeInterval;
     let thisSecond = Math.floor(time / 1000);
     var minute = Math.floor(thisSecond / 60);
     var second = thisSecond % 60;
@@ -115,7 +116,6 @@ function load() {
   awayScore = 0
   timeSet = 0;
   isGoal = 0
-  setTimer = 1;
   getMatchJsonData()
   countdown()
 }
@@ -149,7 +149,7 @@ function ballPosition() {
   LL = L
   if (L < 0.01) L = 0.01
   H = L / 4
-  H = max(30, H)
+  H = max(25, H)
   ll = Math.sqrt((x1 - x) * (x1 - x) + (y1 - y) * (y1 - y))
   hh = H * (1 - (4 * (ll - L / 2) * (ll - L / 2)) / (L * L))
   h1 = ((w2 + ((w1 - w2) / hp) * y) * hh) / w1
@@ -232,6 +232,7 @@ function stepInitialize() {
     if (currentState > 0) {
       if (gameState[currentState]['seconds'] > -1) {
         // time = gameState[currentState]['seconds'] * 1000
+        time = getDataTime
         timeFlag = 1
       }
     }
@@ -243,8 +244,8 @@ function stepInitialize() {
   if (currentState < gameState.length - 1) {
     currentState++
     if(gameState[currentState]['seconds'] > 0){
-      time = gameState[currentState]['seconds'] * 1000
-      if(gameState[currentState]['type'] == 'periodscore') setTimer = 0;
+      // time = gameState[currentState]['seconds'] * 1000
+      // if(gameState[currentState]['type'] == 'periodscore') setTimer = 0;
     }
     if (gameState[currentState]['X'] > -1) {
       x2 = ((gameState[currentState]['X'] - 50) * w1) / 50
@@ -302,22 +303,23 @@ function drawRect() {
   if (rt > 1) rt = 1
   if (gameState[currentState]['team'] == 'home') {
     document.getElementById('awayStatePolygon').style.fill = 'url(#none)'
-      document.getElementById('homeStatePolygon').style.fill ='url(#homePossession)'
-      if (rectId == 0 || rectId == 1) {
-        document.getElementById('homeStatePolygon').points[1].x = 450
-        document.getElementById('homeStatePolygon').points[2].x = 500
-        document.getElementById('homeStatePolygon').points[3].x = 439
-      }
-      if (rectId == -1) {
-        document.getElementById('homeStatePolygon').points[1].x =
-          243 + (450 - 243) * rt
-        document.getElementById('homeStatePolygon').points[2].x =
-          180 + (500 - 180) * rt
-        document.getElementById('homeStatePolygon').points[3].x =
-          113 + (439 - 113) * rt
-      }
-      currentRectId = 1
-  } else {
+    document.getElementById('homeStatePolygon').style.fill ='url(#homePossession)'
+    if (rectId == 0 || rectId == 1) {
+      document.getElementById('homeStatePolygon').points[1].x = 450
+      document.getElementById('homeStatePolygon').points[2].x = 500
+      document.getElementById('homeStatePolygon').points[3].x = 439
+    }
+    if (rectId == -1) {
+      document.getElementById('homeStatePolygon').points[1].x =
+        243 + (450 - 243) * rt
+      document.getElementById('homeStatePolygon').points[2].x =
+        180 + (500 - 180) * rt
+      document.getElementById('homeStatePolygon').points[3].x =
+        113 + (439 - 113) * rt
+    }
+    currentRectId = 1
+  } 
+  else {
     document.getElementById('homeStatePolygon').style.fill = 'url(#none)'
       currentRectId = -1
       document.getElementById('awayStatePolygon').style.fill ='url(#awayPossession)'
@@ -364,160 +366,8 @@ function showState() {
   if(gameState[currentState]['type'] && gameState[currentState]['type'] != 'possession'){
     remove()
     if(gameState[currentState]['team'])showAction()
-    if(gameState[currentState]['type'] == 'substitution'){
-      document.getElementById('substitutionOut').setAttribute('fill-opacity', 0.5)
-      document.getElementById('substitutionIn').setAttribute('fill-opacity', 0.5)
-      if(gameState[currentState]['playerin']['name']) document.getElementById('substitutionInPlayer').textContent = gameState[currentState]['playerin']['name'] + ' IN'
-      if(gameState[currentState]['playerout']['name']) document.getElementById('substitutionOutPlayer').textContent = 'OUT ' + gameState[currentState]['playerout']['name']
-    }
-    if(gameState[currentState]['type'] == 'throwin'){
-     showAction()
-      // document.getElementById('center_rect').setAttribute('fill-opacity', 0.3)
-      // document.getElementById('center_text').textContent = gameState[currentState]['name']
-      // document.getElementById('bottom_rect').setAttribute('fill-opacity', 0.3)
-      // document.getElementById('bottom_rect').setAttribute('height', 40)
-      // document.getElementById('bottom_text').textContent = teamNames[gameState[currentState]['team']]
-
-      if (gameState[currentState]['team'] == 'home') {
-        document.getElementById('homeKickPolygon').style.fill = 'url(#homeKick)'
-        if(y2 < hp * 0.3 && x2 > w1 * 0.6) document.getElementById('homeKickPolygon').style.fill = 'url(#homeTopKick)'
-        if(y2 > hp * 0.7 && x2 > w1 * 0.6) document.getElementById('homeKickPolygon').style.fill = 'url(#homeBottomKick)'
-        document.getElementById('homeKickPolygon').points[0].x =
-          x_b + w2 + topLeft
-        document.getElementById('homeKickPolygon').points[0].y = y_b + topPosition
-        document.getElementById('homeState').textContent = gameState[currentState]['name']
-      } else {
-        document.getElementById('awayKickPolygon').style.fill = 'url(#awayKick)'
-        if(y2 < hp * 0.3 && x2 < - w1 * 0.3) document.getElementById('awayKickPolygon').style.fill = 'url(#awayTopKick)'
-        if(y2 > hp * 0.7 && x2 < - w1 * 0.3) document.getElementById('awayKickPolygon').style.fill = 'url(#awayBottomKick)'
-        document.getElementById('awayKickPolygon').points[0].x =
-          x_b + w2 + topLeft
-        document.getElementById('awayKickPolygon').points[0].y = y_b + topPosition
-        document.getElementById('awayState').textContent = gameState[currentState]['name']
-      }
-    }
-    if(gameState[currentState]['type'] == 'freekick'){
-      showAction()
-      if (gameState[currentState]['team'] == 'home') {
-        document.getElementById('homeKickPolygon').style.fill = 'url(#homeKick)'
-        if(y2 < hp * 0.3 && x2 > w1 * 0.6) document.getElementById('homeKickPolygon').style.fill = 'url(#homeTopKick)'
-        if(y2 > hp * 0.7 && x2 > w1 * 0.6) document.getElementById('homeKickPolygon').style.fill = 'url(#homeBottomKick)'
-        document.getElementById('homeKickPolygon').points[0].x =
-          x_b + w2 + topLeft
-        document.getElementById('homeKickPolygon').points[0].y = y_b + topPosition
-        document.getElementById('homeState').textContent = gameState[currentState]['name']
-      } else {
-        document.getElementById('awayKickPolygon').style.fill = 'url(#awayKick)'
-        if(y2 < hp * 0.3 && x2 < - w1 * 0.3) document.getElementById('awayKickPolygon').style.fill = 'url(#awayTopKick)'
-        if(y2 > hp * 0.7 && x2 < - w1 * 0.3) document.getElementById('awayKickPolygon').style.fill = 'url(#awayBottomKick)'
-        document.getElementById('awayKickPolygon').points[0].x =
-          x_b + w2 + topLeft
-        document.getElementById('awayKickPolygon').points[0].y = y_b + topPosition
-        document.getElementById('awayState').textContent = gameState[currentState]['name']
-      }
-    }
-    if(gameState[currentState]['type'] == 'shotofftarget'){
-      showAction()
-      // document.getElementById('center_rect').setAttribute('fill-opacity', 0.3)
-      // document.getElementById('center_text').textContent = gameState[currentState]['name']
-      // document.getElementById('bottom_rect').setAttribute('fill-opacity', 0.3)
-      // document.getElementById('bottom_rect').setAttribute('height', 40)
-      // document.getElementById('bottom_text').textContent = teamNames[gameState[currentState]['team']]
-
-      if (gameState[currentState]['team'] == 'home') {
-        document.getElementById('homeKickPolygon').style.fill = 'url(#homeKick)'
-        if(y2 < hp * 0.3 && x2 > w1 * 0.6) document.getElementById('homeKickPolygon').style.fill = 'url(#homeTopKick)'
-        if(y2 > hp * 0.7 && x2 > w1 * 0.6) document.getElementById('homeKickPolygon').style.fill = 'url(#homeBottomKick)'
-        document.getElementById('homeKickPolygon').points[0].x =
-          x_b + w2 + topLeft
-        document.getElementById('homeKickPolygon').points[0].y = y_b + topPosition
-        document.getElementById('homeState').textContent = gameState[currentState]['name']
-      } else {
-        document.getElementById('awayKickPolygon').style.fill = 'url(#awayKick)'
-        if(y2 < hp * 0.3 && x2 < - w1 * 0.3) document.getElementById('awayKickPolygon').style.fill = 'url(#awayTopKick)'
-        if(y2 > hp * 0.7 && x2 < - w1 * 0.3) document.getElementById('awayKickPolygon').style.fill = 'url(#awayBottomKick)'
-        document.getElementById('awayKickPolygon').points[0].x =
-          x_b + w2 + topLeft
-        document.getElementById('awayKickPolygon').points[0].y = y_b + topPosition
-        document.getElementById('awayState').textContent = gameState[currentState]['name']
-      }
-    }
-    if(gameState[currentState]['type'] == 'shotontarget'){
-      showAction()
-      if (gameState[currentState]['team'] == 'home') {
-        document.getElementById('homeKickPolygon').style.fill = 'url(#homeKick)'
-        if(y2 < hp * 0.3 && x2 > w1 * 0.6) document.getElementById('homeKickPolygon').style.fill = 'url(#homeTopKick)'
-        if(y2 > hp * 0.7 && x2 > w1 * 0.6) document.getElementById('homeKickPolygon').style.fill = 'url(#homeBottomKick)'
-        document.getElementById('homeKickPolygon').points[0].x =
-          x_b + w2 + topLeft
-        document.getElementById('homeKickPolygon').points[0].y = y_b + topPosition
-        document.getElementById('homeState').textContent = gameState[currentState]['name']
-      } else {
-        document.getElementById('awayKickPolygon').style.fill = 'url(#awayKick)'
-        if(y2 < hp * 0.3 && x2 < - w1 * 0.3) document.getElementById('awayKickPolygon').style.fill = 'url(#awayTopKick)'
-        if(y2 > hp * 0.7 && x2 < - w1 * 0.3) document.getElementById('awayKickPolygon').style.fill = 'url(#awayBottomKick)'
-        document.getElementById('awayKickPolygon').points[0].x =
-          x_b + w2 + topLeft
-        document.getElementById('awayKickPolygon').points[0].y = y_b + topPosition
-        document.getElementById('awayState').textContent = gameState[currentState]['name']
-      }
-    }
-    if(gameState[currentState]['type'] == 'goal_kick'){
-      showAction()
-      if (gameState[currentState]['team'] == 'home') {
-        document.getElementById('homeKickPolygon').style.fill = 'url(#homeKick)'
-        if(y2 < hp * 0.3 && x2 > w1 * 0.6) document.getElementById('homeKickPolygon').style.fill = 'url(#homeTopKick)'
-        if(y2 > hp * 0.7 && x2 > w1 * 0.6) document.getElementById('homeKickPolygon').style.fill = 'url(#homeBottomKick)'
-        document.getElementById('homeKickPolygon').points[0].x =
-          x_b + w2 + topLeft
-        document.getElementById('homeKickPolygon').points[0].y = y_b + topPosition
-        document.getElementById('homeState').textContent = gameState[currentState]['name']
-      } else {
-        document.getElementById('awayKickPolygon').style.fill = 'url(#awayKick)'
-        if(y2 < hp * 0.3 && x2 < - w1 * 0.3) document.getElementById('awayKickPolygon').style.fill = 'url(#awayTopKick)'
-        if(y2 > hp * 0.7 && x2 < - w1 * 0.3) document.getElementById('awayKickPolygon').style.fill = 'url(#awayBottomKick)'
-        document.getElementById('awayKickPolygon').points[0].x =
-          x_b + w2 + topLeft
-        document.getElementById('awayKickPolygon').points[0].y = y_b + topPosition
-        document.getElementById('awayState').textContent = gameState[currentState]['name']
-      }
-    }
-    if(gameState[currentState]['type'] == 'match_ended'){
-      document.getElementById('center_rect').setAttribute('fill-opacity', 0.3)
-      document.getElementById('center_text').textContent = gameState[currentState]['name']
-    }
-    if(gameState[currentState]['type'] == 'periodstart'){
-      document.getElementById('center_rect').setAttribute('fill-opacity', 0.3)
-      document.getElementById('center_text').textContent = gameState[currentState]['name']
-      // 
-    }
-    if(gameState[currentState]['type'] == 'periodscore'){
-      document.getElementById('center_rect').setAttribute('fill-opacity', 0.3)
-      document.getElementById('center_text').textContent = gameState[currentState]['name']
-      // 
-    }
-    if(gameState[currentState]['type'] == 'corner'){
-      showAction()
-    }
-    if(gameState[currentState]['type'] == 'injurytimeshown'){
-      document.getElementById('center_rect').setAttribute('fill-opacity', 0.3)
-      document.getElementById('center_text').textContent = 'Injury time: ' + gameState[currentState]['minutes'] + 'mins'
-    }
-    if(gameState[currentState]['type'] == 'injury'){
-      document.getElementById('center_rect').setAttribute('fill-opacity', 0.3)
-      document.getElementById('center_text').textContent = gameState[currentState]['name']
-      document.getElementById('bottom_rect').setAttribute('fill-opacity', 0.3)
-      document.getElementById('bottom_rect').setAttribute('height', 40)
-      document.getElementById('bottom_text').textContent = teamNames[gameState[currentState]['team']]
-      if(gameState[currentState]['player']['name']){
-        document.getElementById('bottom_rect').setAttribute('height', 70)
-        document.getElementById('bottom2_text').textContent = gameState[currentState]['player']['name']
-      }
-    }
   }
   else {
-    // document.getElementById('homeStateLabels').style.display = 'block'
-    // document.getElementById('awayStateLabels').style.display = 'block'
   }
 }
 function remove() {
@@ -525,8 +375,6 @@ function remove() {
   // document.getElementById('awayStatePolygon').style.fill = 'url(#none)'
   document.getElementById('homeKickPolygon').style.fill = 'url(#none)'
   document.getElementById('awayKickPolygon').style.fill = 'url(#none)'
-  // document.getElementById('homeStateLabels').style.display = 'none'
-  // document.getElementById('awayStateLabels').style.display = 'none'
   document.getElementById('goalImage').style.display = 'none'
   document.getElementById('injury').style.display = 'none'
   document.getElementById('yellowCard').style.display = 'none'
@@ -552,38 +400,11 @@ function mapY(x11, y11) {
   return y_11
 }
 function showAction() {
-  // document.getElementById('ballState').textContent = gameState[currentState]['name']
-  // document.getElementById('holder').textContent = teamNames[gameState[currentState]['team']].toUpperCase()
-  // var rectWidth = document.getElementById('ballState').getBBox().width;
-  // rectWidth = max(rectWidth, document.getElementById('holder').getBBox().width) + 20
-  // document.getElementById('actionBoard').setAttribute('width', rectWidth)
-  // document.getElementById('actionBoard').setAttribute('height', 50)
-  // document.getElementById('actionBoard').setAttribute('x', x_b + w2 + topLeft - rectWidth - 10)
-  // document.getElementById('actionBoard').setAttribute('y', y_b + topPosition - 50 - 10)
-  // document.getElementById('holder').setAttribute('text-anchor', 'end')
-  // document.getElementById('ballState').setAttribute('text-anchor', 'end')
-  // document.getElementById('holder').setAttribute('x', x_b + w2 + topLeft - 20)
-  // document.getElementById('holder').setAttribute('y', y_b + topPosition - 12 - 5)
-  // document.getElementById('ballState').setAttribute('x', x_b + w2 + topLeft - 20)
-  // document.getElementById('ballState').setAttribute('y', y_b + topPosition - 37 - 5)
-  // document.getElementById('stateBoardLine').setAttribute('stroke-opacity', 0.9)
-  // document.getElementById('stateBoardLine').setAttribute('x1', x_b + w2 + topLeft - 15)
-  // document.getElementById('stateBoardLine').setAttribute('x2', x_b + w2 + topLeft - 15)
-  // document.getElementById('stateBoardLine').setAttribute('y1', y_b + topPosition - 50 - 5)
-  // document.getElementById('stateBoardLine').setAttribute('y2', y_b + topPosition - 15)
-document.getElementById('stateLabels').style.display = 'none'
+  document.getElementById('stateLabels').style.display = 'none'
+  document.getElementById('awayStatePolygon').style.fill = 'url(#none)'
+  document.getElementById('homeStatePolygon').style.fill = 'url(#none)'
   document.getElementById('center_rect').setAttribute('fill-opacity', 0.5)
   document.getElementById('center_text').textContent = gameState[currentState]['name']
-  // if(gameState[currentState]['team'] == 'away'){
-  //   document.getElementById('actionBoard').setAttribute('x', x_b + w2 + topLeft + 10)
-  //   document.getElementById('holder').setAttribute('text-anchor', 'start')
-  //   document.getElementById('ballState').setAttribute('text-anchor', 'start')
-  //   document.getElementById('holder').setAttribute('x', x_b + w2 + topLeft + 20)
-  //   document.getElementById('ballState').setAttribute('x', x_b + w2 + topLeft + 20)
-  //   document.getElementById('stateBoardLine').setAttribute('stroke-opacity', 0.9)
-  //   document.getElementById('stateBoardLine').setAttribute('x1', x_b + w2 + topLeft + 15)
-  //   document.getElementById('stateBoardLine').setAttribute('x2', x_b + w2 + topLeft + 15)
-  // }  
 }
 function displayState() {
   var statePositionX, statePositionY
@@ -599,20 +420,26 @@ function displayState() {
   if(gameState[currentState]['team'] == 'home'){
     document.getElementById('state').setAttribute('text-anchor', 'end')
     document.getElementById('teamName').setAttribute('text-anchor', 'end')
-    document.getElementById('stateLine').setAttribute('x1', '-10')
-    document.getElementById('stateLine').setAttribute('x2', '-10')
-    document.getElementById('state').setAttribute('x', '-15')
-    document.getElementById('teamName').setAttribute('x', '-15')
+    document.getElementById('state').setAttribute('x', '-45')
+    document.getElementById('teamName').setAttribute('x', '-45')
+    document.getElementById('stateRect').setAttribute('x', '-150')
+    document.getElementById('stateRect').setAttribute('width', '150')
+    document.getElementById('jerseyCircle').setAttribute('cx', '-20')
+    document.getElementById('stateJersey').setAttribute('transform', 'translate(-20, -25)')
+    document.getElementById('homeBaseColorS').setAttribute('fill', '#'+ homePlayerColor);
     document.getElementById('state').textContent = 'Possession'
     statePositionX = 400
   }
   else {
     document.getElementById('state').setAttribute('text-anchor', 'start')
     document.getElementById('teamName').setAttribute('text-anchor', 'start')
-    document.getElementById('stateLine').setAttribute('x1', '10')
-    document.getElementById('stateLine').setAttribute('x2', '10')
-    document.getElementById('state').setAttribute('x', '15')
-    document.getElementById('teamName').setAttribute('x', '15')
+    document.getElementById('state').setAttribute('x', '45')
+    document.getElementById('teamName').setAttribute('x', '45')
+    document.getElementById('stateRect').setAttribute('x', '0')
+    document.getElementById('stateRect').setAttribute('width', '150')
+    document.getElementById('jerseyCircle').setAttribute('cx', '20')
+    document.getElementById('stateJersey').setAttribute('transform', 'translate(20, -25)')
+    document.getElementById('homeBaseColorS').setAttribute('fill', '#'+ awayPlayerColor);
     document.getElementById('state').textContent = 'Possession'
     statePositionX = 600
   }
