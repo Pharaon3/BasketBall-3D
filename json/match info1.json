@@ -1,0 +1,320 @@
+{
+    "queryUrl": "match_info\/34981261",
+    "doc": [
+        {
+            "event": "match_info",
+            "_dob": 1671211236,
+            "_maxage": 10,
+            "data": {
+                "_doc": "match_info",
+                "match": {
+                    "_doc": "match",
+                    "_id": 34981261,
+                    "_sid": 2,
+                    "_seasonid": 96097,
+                    "_rcid": 103,
+                    "_tid": 38610,
+                    "_utid": 1438,
+                    "_dt": {
+                        "_doc": "time",
+                        "time": "16:30",
+                        "date": "16\/12\/22",
+                        "tz": "UTC",
+                        "tzoffset": 0,
+                        "uts": 1671208200
+                    },
+                    "week": 50,
+                    "coverage": {
+                        "lineup": 2,
+                        "formations": 0,
+                        "livetable": 67549,
+                        "injuries": 0,
+                        "ballspotting": false,
+                        "cornersonly": true,
+                        "multicast": false,
+                        "scoutmatch": 1,
+                        "scoutcoveragestatus": 0,
+                        "scoutconnected": true,
+                        "liveodds": true,
+                        "deepercoverage": false,
+                        "tacticallineup": false,
+                        "basiclineup": true,
+                        "hasstats": true,
+                        "inlivescore": true,
+                        "advantage": null,
+                        "tiebreak": null,
+                        "paperscorecard": null,
+                        "penaltyshootout": 1,
+                        "scouttest": false,
+                        "lmtsupport": 3,
+                        "venue": true,
+                        "matchdatacomplete": false,
+                        "mediacoverage": false,
+                        "substitutions": false
+                    },
+                    "result": {
+                        "home": 52,
+                        "away": 41,
+                        "winner": "home"
+                    },
+                    "periods": {
+                        "p1": {
+                            "home": 27,
+                            "away": 25
+                        },
+                        "p2": {
+                            "home": 25,
+                            "away": 16
+                        }
+                    },
+                    "updated_uts": 1671211162,
+                    "ended_uts": false,
+                    "p": "32",
+                    "ptime": 1671211162,
+                    "timeinfo": {
+                        "injurytime": null,
+                        "ended": null,
+                        "started": "1671208311",
+                        "played": "1199",
+                        "remaining": "0",
+                        "running": false
+                    },
+                    "teams": {
+                        "home": {
+                            "_doc": "team",
+                            "_id": 5275878,
+                            "_sid": 2,
+                            "uid": 6663,
+                            "virtual": false,
+                            "name": "CSKA",
+                            "mediumname": "CSKA Moscow",
+                            "abbr": "CMO",
+                            "nickname": null,
+                            "iscountry": false,
+                            "haslogo": true,
+                            "homerealcategoryid": 157,
+                            "countrycode": {
+                                "_doc": "countrycode",
+                                "_id": 177,
+                                "a2": "ru",
+                                "name": "Russia",
+                                "a3": "RUS",
+                                "ioc": "RUS",
+                                "continentid": 1,
+                                "continent": "Europe",
+                                "population": 142905208
+                            }
+                        },
+                        "away": {
+                            "_doc": "team",
+                            "_id": 5874090,
+                            "_sid": 2,
+                            "uid": 32423,
+                            "virtual": false,
+                            "name": "Lokomotiv Kuban",
+                            "mediumname": "BC Lokomotiv Kuban",
+                            "abbr": "LOK",
+                            "nickname": null,
+                            "iscountry": false,
+                            "haslogo": true,
+                            "homerealcategoryid": 157,
+                            "countrycode": {
+                                "_doc": "countrycode",
+                                "_id": 177,
+                                "a2": "ru",
+                                "name": "Russia",
+                                "a3": "RUS",
+                                "ioc": "RUS",
+                                "continentid": 1,
+                                "continent": "Europe",
+                                "population": 142905208
+                            }
+                        }
+                    },
+                    "status": {
+                        "_doc": "status",
+                        "_id": 30,
+                        "name": "Break"
+                    },
+                    "removed": false,
+                    "facts": false,
+                    "stadiumid": 7234,
+                    "localderby": false,
+                    "distance": 1193,
+                    "weather": null,
+                    "pitchcondition": null,
+                    "temperature": null,
+                    "wind": null,
+                    "windadvantage": 0,
+                    "matchstatus": "live",
+                    "postponed": false,
+                    "cancelled": false,
+                    "walkover": false,
+                    "hf": 9,
+                    "periodlength": 10,
+                    "numberofperiods": 4,
+                    "overtimelength": 5,
+                    "tobeannounced": false,
+                    "basketballbonus": {
+                        "home": false,
+                        "away": false
+                    }
+                },
+                "cities": {
+                    "home": {
+                        "_id": 306,
+                        "name": "Moscow"
+                    },
+                    "away": {
+                        "_id": 1213,
+                        "name": "Krasnodar"
+                    }
+                },
+                "stadium": {
+                    "_doc": "stadium",
+                    "_id": "7234",
+                    "name": "CSKA Universal Sports Hall",
+                    "description": "",
+                    "city": "Moscow",
+                    "country": "Russia",
+                    "state": null,
+                    "cc": {
+                        "_doc": "countrycode",
+                        "_id": 177,
+                        "a2": "ru",
+                        "name": "Russia",
+                        "a3": "RUS",
+                        "ioc": "RUS",
+                        "continentid": 1,
+                        "continent": "Europe",
+                        "population": 142905208
+                    },
+                    "capacity": "5500",
+                    "hometeams": [
+                        {
+                            "_doc": "uniqueteam",
+                            "_id": 6663,
+                            "_sid": 2,
+                            "_rcid": 157,
+                            "name": "CSKA",
+                            "mediumname": "CSKA Moscow",
+                            "suffix": null,
+                            "abbr": "CMO",
+                            "nickname": null,
+                            "teamtypeid": 0,
+                            "iscountry": false,
+                            "sex": "m",
+                            "haslogo": true,
+                            "founded": null,
+                            "website": null
+                        }
+                    ],
+                    "googlecoords": "55.789231,37.542633",
+                    "pitchsize": null
+                },
+                "tournament": {
+                    "_doc": "tournament",
+                    "_id": 38610,
+                    "_sid": 2,
+                    "_rcid": 103,
+                    "_isk": 1000,
+                    "_tid": 38610,
+                    "_utid": 1438,
+                    "name": "United League",
+                    "abbr": "",
+                    "ground": null,
+                    "friendly": false,
+                    "seasonid": 96097,
+                    "currentseason": 96097,
+                    "year": "22\/23",
+                    "seasontype": "21",
+                    "seasontypename": "Regular Season",
+                    "seasontypeunique": "68",
+                    "groupname": "United League",
+                    "livetable": 67549,
+                    "cuprosterid": null,
+                    "roundbyround": false,
+                    "tournamentlevelorder": null,
+                    "tournamentlevelname": null,
+                    "outdated": false
+                },
+                "sport": {
+                    "_doc": "sport",
+                    "_id": 2,
+                    "_sid": 2,
+                    "name": "Basketball"
+                },
+                "realcategory": {
+                    "_doc": "realcategory",
+                    "_id": 103,
+                    "_sid": 2,
+                    "_rcid": 103,
+                    "name": "International",
+                    "cc": null
+                },
+                "season": {
+                    "_id": "96097",
+                    "_doc": "season",
+                    "_utid": 1438,
+                    "_sid": 2,
+                    "name": "United League 22\/23",
+                    "abbr": "UL 22\/23",
+                    "start": {
+                        "_doc": "time",
+                        "time": "00:00",
+                        "date": "02\/10\/22",
+                        "tz": "UTC",
+                        "tzoffset": 0,
+                        "uts": 1664668800
+                    },
+                    "end": {
+                        "_doc": "time",
+                        "time": "23:59",
+                        "date": "17\/06\/23",
+                        "tz": "UTC",
+                        "tzoffset": 0,
+                        "uts": 1687046399
+                    },
+                    "neutralground": false,
+                    "friendly": false,
+                    "currentseasonid": 96097,
+                    "year": "22\/23"
+                },
+                "jerseys": {
+                    "home": {
+                        "player": {
+                            "base": "a60a10",
+                            "sleeve": "a60a10",
+                            "number": "1d257d",
+                            "type": "no_sleeves",
+                            "real": true
+                        },
+                        "GK": {
+                            "base": "efc131",
+                            "sleeve": "333333",
+                            "number": "000000",
+                            "real": false,
+                            "type": "short_sleeves"
+                        }
+                    },
+                    "away": {
+                        "player": {
+                            "base": "ffffff",
+                            "sleeve": "ffffff",
+                            "number": "cc0000",
+                            "type": "no_sleeves",
+                            "real": true
+                        },
+                        "GK": {
+                            "base": "efc131",
+                            "sleeve": "333333",
+                            "number": "000000",
+                            "real": false,
+                            "type": "short_sleeves"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

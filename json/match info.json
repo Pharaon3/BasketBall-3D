@@ -1,0 +1,341 @@
+{
+    "queryUrl": "match_info\/35848209",
+    "doc": [
+        {
+            "event": "match_info",
+            "_dob": 1671154384,
+            "_maxage": 10,
+            "data": {
+                "_doc": "match_info",
+                "match": {
+                    "_doc": "match",
+                    "_id": 35848209,
+                    "_sid": 2,
+                    "_seasonid": 97669,
+                    "_rcid": 263,
+                    "_tid": 2896,
+                    "_utid": 1562,
+                    "_dt": {
+                        "_doc": "time",
+                        "time": "23:30",
+                        "date": "15\/12\/22",
+                        "tz": "UTC",
+                        "tzoffset": 0,
+                        "uts": 1671147000
+                    },
+                    "week": 50,
+                    "coverage": {
+                        "lineup": 0,
+                        "formations": 0,
+                        "livetable": 0,
+                        "injuries": 0,
+                        "ballspotting": false,
+                        "cornersonly": false,
+                        "multicast": false,
+                        "scoutmatch": 0,
+                        "scoutcoveragestatus": 0,
+                        "scoutconnected": false,
+                        "liveodds": false,
+                        "deepercoverage": false,
+                        "tacticallineup": false,
+                        "basiclineup": false,
+                        "hasstats": true,
+                        "inlivescore": true,
+                        "advantage": null,
+                        "tiebreak": null,
+                        "paperscorecard": null,
+                        "penaltyshootout": 0,
+                        "scouttest": false,
+                        "lmtsupport": 2,
+                        "venue": true,
+                        "matchdatacomplete": false,
+                        "mediacoverage": false,
+                        "substitutions": false
+                    },
+                    "result": {
+                        "home": 82,
+                        "away": 52,
+                        "winner": "home"
+                    },
+                    "periods": {
+                        "p1": {
+                            "home": 23,
+                            "away": 12
+                        },
+                        "p2": {
+                            "home": 22,
+                            "away": 15
+                        },
+                        "p3": {
+                            "home": 20,
+                            "away": 16
+                        },
+                        "p4": {
+                            "home": 17,
+                            "away": 9
+                        },
+                        "ft": {
+                            "home": 82,
+                            "away": 51
+                        }
+                    },
+                    "updated_uts": 1671154380,
+                    "ended_uts": false,
+                    "p": "4",
+                    "ptime": 1671152447,
+                    "timeinfo": {
+                        "injurytime": null,
+                        "ended": null,
+                        "started": null,
+                        "played": null,
+                        "remaining": null,
+                        "running": false
+                    },
+                    "teams": {
+                        "home": {
+                            "_doc": "team",
+                            "_id": 1492759,
+                            "_sid": 2,
+                            "uid": 129828,
+                            "virtual": false,
+                            "name": "Bauru",
+                            "mediumname": "Bauru Basket SP",
+                            "abbr": "BAU",
+                            "nickname": null,
+                            "iscountry": false,
+                            "haslogo": true,
+                            "homerealcategoryid": 263,
+                            "countrycode": {
+                                "_doc": "countrycode",
+                                "_id": 30,
+                                "a2": "br",
+                                "name": "Brazil",
+                                "a3": "BRA",
+                                "ioc": "BRA",
+                                "continentid": 3,
+                                "continent": "South America",
+                                "population": 208360000
+                            }
+                        },
+                        "away": {
+                            "_doc": "team",
+                            "_id": 6532582,
+                            "_sid": 2,
+                            "uid": 129836,
+                            "virtual": false,
+                            "name": "Fortaleza Cearense",
+                            "mediumname": "Fortaleza Basquete Cearense",
+                            "abbr": "CEA",
+                            "nickname": null,
+                            "iscountry": false,
+                            "haslogo": true,
+                            "homerealcategoryid": 263,
+                            "countrycode": {
+                                "_doc": "countrycode",
+                                "_id": 30,
+                                "a2": "br",
+                                "name": "Brazil",
+                                "a3": "BRA",
+                                "ioc": "BRA",
+                                "continentid": 3,
+                                "continent": "South America",
+                                "population": 208360000
+                            }
+                        }
+                    },
+                    "status": {
+                        "_doc": "status",
+                        "_id": 16,
+                        "name": "4th quarter"
+                    },
+                    "removed": false,
+                    "facts": false,
+                    "stadiumid": 56130,
+                    "localderby": false,
+                    "distance": 2258,
+                    "weather": null,
+                    "pitchcondition": null,
+                    "temperature": null,
+                    "wind": null,
+                    "windadvantage": 0,
+                    "matchstatus": "live",
+                    "postponed": false,
+                    "cancelled": false,
+                    "walkover": false,
+                    "hf": 2.5,
+                    "periodlength": 10,
+                    "numberofperiods": 4,
+                    "overtimelength": 5,
+                    "tobeannounced": false,
+                    "basketballbonus": {
+                        "home": false,
+                        "away": false
+                    }
+                },
+                "cities": {
+                    "home": {
+                        "_id": 6171,
+                        "name": "Araraquara"
+                    },
+                    "away": {
+                        "_id": 1475,
+                        "name": "Fortaleza"
+                    }
+                },
+                "stadium": {
+                    "_doc": "stadium",
+                    "_id": "56130",
+                    "name": "Ginasio Castelo Branco",
+                    "description": "",
+                    "city": "Araraquara",
+                    "country": "Brazil",
+                    "state": null,
+                    "cc": {
+                        "_doc": "countrycode",
+                        "_id": 30,
+                        "a2": "br",
+                        "name": "Brazil",
+                        "a3": "BRA",
+                        "ioc": "BRA",
+                        "continentid": 3,
+                        "continent": "South America",
+                        "population": 208360000
+                    },
+                    "capacity": "3700",
+                    "hometeams": [
+                        {
+                            "_doc": "uniqueteam",
+                            "_id": 129828,
+                            "_sid": 2,
+                            "_rcid": 263,
+                            "name": "Bauru",
+                            "mediumname": "Bauru Basket SP",
+                            "suffix": null,
+                            "abbr": "BAU",
+                            "nickname": null,
+                            "teamtypeid": 0,
+                            "iscountry": false,
+                            "sex": "m",
+                            "haslogo": true,
+                            "founded": null,
+                            "website": null
+                        }
+                    ],
+                    "googlecoords": "-21.7766708,-48.1749479",
+                    "pitchsize": null
+                },
+                "tournament": {
+                    "_doc": "tournament",
+                    "_id": 2896,
+                    "_sid": 2,
+                    "_rcid": 263,
+                    "_isk": 1000,
+                    "_tid": 2896,
+                    "_utid": 1562,
+                    "name": "NBB",
+                    "abbr": "",
+                    "ground": null,
+                    "friendly": false,
+                    "seasonid": 97669,
+                    "currentseason": 97669,
+                    "year": "22\/23",
+                    "seasontype": "21",
+                    "seasontypename": "Regular Season",
+                    "seasontypeunique": "68",
+                    "livetable": false,
+                    "cuprosterid": null,
+                    "roundbyround": false,
+                    "tournamentlevelorder": 1,
+                    "tournamentlevelname": "1st level",
+                    "outdated": false
+                },
+                "sport": {
+                    "_doc": "sport",
+                    "_id": 2,
+                    "_sid": 2,
+                    "name": "Basketball"
+                },
+                "realcategory": {
+                    "_doc": "realcategory",
+                    "_id": 263,
+                    "_sid": 2,
+                    "_rcid": 263,
+                    "name": "Brazil",
+                    "cc": {
+                        "_doc": "countrycode",
+                        "_id": 30,
+                        "a2": "br",
+                        "name": "Brazil",
+                        "a3": "BRA",
+                        "ioc": "BRA",
+                        "continentid": 3,
+                        "continent": "South America",
+                        "population": 208360000
+                    }
+                },
+                "season": {
+                    "_id": "97669",
+                    "_doc": "season",
+                    "_utid": 1562,
+                    "_sid": 2,
+                    "name": "NBB 22\/23",
+                    "abbr": "N 22\/23",
+                    "start": {
+                        "_doc": "time",
+                        "time": "00:00",
+                        "date": "15\/10\/22",
+                        "tz": "UTC",
+                        "tzoffset": 0,
+                        "uts": 1665792000
+                    },
+                    "end": {
+                        "_doc": "time",
+                        "time": "23:59",
+                        "date": "30\/06\/23",
+                        "tz": "UTC",
+                        "tzoffset": 0,
+                        "uts": 1688169599
+                    },
+                    "neutralground": false,
+                    "friendly": false,
+                    "currentseasonid": 97669,
+                    "year": "22\/23"
+                },
+                "jerseys": {
+                    "home": {
+                        "player": {
+                            "base": "ffffff",
+                            "sleeve": "ffffff",
+                            "number": "008040",
+                            "type": "no_sleeves",
+                            "real": true
+                        },
+                        "GK": {
+                            "base": "efc131",
+                            "sleeve": "333333",
+                            "number": "000000",
+                            "real": false,
+                            "type": "short_sleeves"
+                        }
+                    },
+                    "away": {
+                        "player": {
+                            "base": "ff0000",
+                            "sleeve": "ffffff",
+                            "number": "ffffff",
+                            "type": "no_sleeves",
+                            "real": true
+                        },
+                        "GK": {
+                            "base": "efc131",
+                            "sleeve": "333333",
+                            "number": "000000",
+                            "real": false,
+                            "type": "short_sleeves"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,149 @@
+{
+  "queryUrl": "match_timelinedelta/35848209",
+  "doc": [
+    {
+      "event": "match_timelinedelta",
+      "_dob": 1671152454,
+      "_maxage": 3,
+      "_synced": true,
+      "data": {
+        "match": {
+          "_doc": "match",
+          "_id": 35848209,
+          "_sid": 2,
+          "_seasonid": 97669,
+          "_rcid": 263,
+          "_tid": 2896,
+          "_utid": 1562,
+          "_dt": {
+            "_doc": "time",
+            "time": "23:30",
+            "date": "15/12/22",
+            "tz": "UTC",
+            "tzoffset": 0,
+            "uts": 1671147000
+          },
+          "week": 50,
+          "coverage": {
+            "lineup": 0,
+            "formations": 0,
+            "livetable": 0,
+            "injuries": 0,
+            "ballspotting": false,
+            "cornersonly": false,
+            "multicast": false,
+            "scoutmatch": 0,
+            "scoutcoveragestatus": 0,
+            "scoutconnected": false,
+            "liveodds": false,
+            "deepercoverage": false,
+            "tacticallineup": false,
+            "basiclineup": false,
+            "hasstats": true,
+            "inlivescore": true,
+            "advantage": null,
+            "tiebreak": null,
+            "paperscorecard": null,
+            "penaltyshootout": 0,
+            "scouttest": false,
+            "lmtsupport": 2,
+            "venue": true,
+            "matchdatacomplete": false,
+            "mediacoverage": false,
+            "substitutions": false
+          },
+          "result": { "home": 65, "away": 42, "winner": "home" },
+          "periods": {
+            "p1": { "home": 23, "away": 12 },
+            "p2": { "home": 22, "away": 14 },
+            "p3": { "home": 20, "away": 16 }
+          },
+          "updated_uts": 1671152447,
+          "ended_uts": false,
+          "p": "4",
+          "ptime": 1671152447,
+          "timeinfo": {
+            "injurytime": null,
+            "ended": null,
+            "started": null,
+            "played": null,
+            "remaining": null,
+            "running": false
+          },
+          "teams": {
+            "home": {
+              "_doc": "team",
+              "_id": 1492759,
+              "_sid": 2,
+              "uid": 129828,
+              "virtual": false,
+              "name": "Bauru",
+              "mediumname": "Bauru Basket SP",
+              "abbr": "BAU",
+              "nickname": null,
+              "iscountry": false,
+              "haslogo": true
+            },
+            "away": {
+              "_doc": "team",
+              "_id": 6532582,
+              "_sid": 2,
+              "uid": 129836,
+              "virtual": false,
+              "name": "Fortaleza Cearense",
+              "mediumname": "Fortaleza Basquete Cearense",
+              "abbr": "CEA",
+              "nickname": null,
+              "iscountry": false,
+              "haslogo": true
+            }
+          },
+          "status": { "_doc": "status", "_id": 16, "name": "4th quarter" },
+          "removed": false,
+          "facts": false,
+          "stadiumid": 56130,
+          "localderby": false,
+          "distance": 2258,
+          "weather": null,
+          "pitchcondition": null,
+          "temperature": null,
+          "wind": null,
+          "windadvantage": 0,
+          "matchstatus": "live",
+          "postponed": false,
+          "cancelled": false,
+          "walkover": false,
+          "hf": 2.5,
+          "periodlength": 10,
+          "numberofperiods": 4,
+          "overtimelength": 5,
+          "tobeannounced": false,
+          "basketballbonus": { "home": false, "away": false }
+        },
+        "events": [
+          {
+            "_doc": "event",
+            "_id": 1330311967,
+            "_scoutid": null,
+            "_sid": 2,
+            "_rcid": 263,
+            "_tid": 2896,
+            "_dc": false,
+            "_typeid": "24",
+            "uts": 1671152447,
+            "updated_uts": 1671152447,
+            "type": "periodstart",
+            "matchid": 35848209,
+            "disabled": 0,
+            "time": -1,
+            "seconds": -1,
+            "name": "4th quarter",
+            "injurytime": 0,
+            "team": "",
+            "period": 4
+          }
+        ]
+      }
+    }
+  ]
+}

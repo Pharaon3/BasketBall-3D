@@ -10,7 +10,7 @@ var teamNames = new Array()
 const equals = (a, b) => JSON.stringify(a) === JSON.stringify(b)
 function getJsonData() {
   fetch(
-    'https://lmt.fn.sportradar.com/demolmt/en/Etc:UTC/gismo/match_timelinedelta/37786887',
+    'https://lmt.fn.sportradar.com/demolmt/en/Etc:UTC/gismo/match_timelinedelta/36494191',
   )
     .then((res) => {
       return res.json()
@@ -63,62 +63,35 @@ function getJsonData() {
           time = event['seconds'] * 1000;
           timeSet = 1;
         }
-        if(event['type'] != 'ballcoordinates' && event['type'] != 'goal' && event['type'] != 'attempt_missed' && event['type'] != 'free_throws_awarded') {
-          let events0 = new Array()
-          events0['X'] = event['X']
-          events0['Y'] = event['Y']
-          events0['team'] = event['team']
-          events0['type'] = event['type']
-          events0['name'] = event['name']
-          events0['uts'] = event['uts']
-          events0['seconds'] = event['seconds']
-          newEvents.push(events0)
+        if(event['type'] != 'ballcoordinates') {
+          newEvents.push(event)
         }
         if (event['type'] == 'goal') {
-          let events0 = new Array()
-          events0['X'] = event['X']
-          events0['Y'] = event['Y']
-          events0['team'] = event['team']
-          events0['type'] = event['type']
-          events0['name'] = event['name']
-          events0['uts'] = event['uts']
-          events0['seconds'] = event['seconds']
-          newEvents.push(events0)
           if (event['team'] == 'home') {
-              let events1 = new Array()
-              let events2 = new Array()
-              events1['X'] = 95
-              events1['Y'] = 50
-              events1['Z'] = 60
-              events1['team'] = 'home'
-              events1['type'] = 'goal'
-              events1['name'] = event['name']
-              events1['uts'] = event['uts']
-              events1['seconds'] = event['seconds']
-              newEvents.push(events1)
-              events2['X'] = 95
-              events2['Y'] = 50
-              events2['team'] = 'home'
-              events2['type'] = 'goal'
-              events2['name'] = event['name']
-              events2['uts'] = event['uts']
-              events2['seconds'] = event['seconds']
-              newEvents.push(events2)
+            events1 = {X: '95', Y: '50', Z: '60'}
+            events1['team'] = 'home'
+            events1['type'] = 'goal'
+            events1['name'] = event['name']
+            events1['uts'] = event['uts']
+            events1['seconds'] = event['seconds']
+            newEvents.push(events1)
+            events2 = {X: '95', Y: '50'}
+            events2['team'] = 'home'
+            events2['type'] = 'goal'
+            events2['name'] = event['name']
+            events2['uts'] = event['uts']
+            events2['seconds'] = event['seconds']
+            newEvents.push(events2)
           } 
           else if (event['team'] == 'away') {
-              let events1 = new Array()
-              events1['X'] = 4
-              events1['Y'] = 50
-              events1['Z'] = 60
+            events1 = {X: '4', Y: '50', Z: '60'}
               events1['team'] = 'away'
               events1['type'] = 'goal'
               events1['name'] = event['name']
               events1['uts'] = event['uts']
               events1['seconds'] = event['seconds']
               newEvents.push(events1)
-              let events2 = new Array()
-              events2['X'] = 6
-              events2['Y'] = 50
+            events2 = {X: '6', Y: '50'}
               events2['team'] = 'away'
               events2['type'] = 'goal'
               events2['name'] = event['name']
@@ -128,29 +101,15 @@ function getJsonData() {
           } else;
         }
         if (event['type'] == 'attempt_missed') {
-          let events0 = new Array()
-          events0['X'] = event['X']
-          events0['Y'] = event['Y']
-          events0['team'] = event['team']
-          events0['type'] = event['type']
-          events0['name'] = event['name']
-          events0['uts'] = event['uts']
-          events0['seconds'] = event['seconds']
-          newEvents.push(events0)
           if (event['team'] == 'home') {
-              let events1 = new Array()
-              let events2 = new Array()
-              events1['X'] = 97
-              events1['Y'] = 50
-              events1['Z'] = 60
+            events1 = {X: '97', Y: '50', Z: '60'}
               events1['team'] = 'home'
               events1['type'] = 'attempt_missed'
               events1['name'] = event['name']
               events1['uts'] = event['uts']
               events1['seconds'] = event['seconds']
               newEvents.push(events1)
-              events2['X'] = 80
-              events2['Y'] = 50
+            events2 = {X: '80', Y: '50'}
               events2['team'] = 'home'
               events2['type'] = 'attempt_missed'
               events2['name'] = event['name']
@@ -158,19 +117,14 @@ function getJsonData() {
               events2['seconds'] = event['seconds']
               newEvents.push(events2)
           } else if (event['team'] == 'away') {
-              let events1 = new Array()
-              let events2 = new Array()
-              events1['X'] = 3
-              events1['Y'] = 50
-              events1['Z'] = 60
+            events1 = {X: '3', Y: '50', Z: '60'}
               events1['team'] = 'away'
               events1['type'] = 'attempt_missed'
               events1['name'] = event['name']
               events1['uts'] = event['uts']
               events1['seconds'] = event['seconds']
               newEvents.push(events1)
-              events2['X'] = 20
-              events2['Y'] = 50
+            events2 = {X: '20', Y: '50'}
               events2['team'] = 'away'
               events2['type'] = 'attempt_missed'
               events2['name'] = event['name']
@@ -179,22 +133,22 @@ function getJsonData() {
               newEvents.push(events2)
           } else;
         }
-        if (event['type'] == 'free_throws_awarded') {
-          let events0 = new Array()
-          if(event['team'] == 'home'){
-            events0['X'] = 80
-          }
-          else if (event['team'] == 'away'){
-            events0['X'] = 20
-          }
-          events0['Y'] = 50
-          events0['team'] = event['team']
-          events0['type'] = event['type']
-          events0['name'] = event['name']
-          events0['uts'] = event['uts']
-          events0['seconds'] = event['seconds']
-          newEvents.push(events0)
-        }
+        // if (event['type'] == 'free_throws_awarded') {
+        //   let events0 = new Array()
+        //   if(event['team'] == 'home'){
+        //     events0['X'] = 80
+        //   }
+        //   else if (event['team'] == 'away'){
+        //     events0['X'] = 20
+        //   }
+        //   events0['Y'] = 50
+        //   events0['team'] = event['team']
+        //   events0['type'] = event['type']
+        //   events0['name'] = event['name']
+        //   events0['uts'] = event['uts']
+        //   events0['seconds'] = event['seconds']
+        //   newEvents.push(events0)
+        // }
         if (event['type'] == 'ballcoordinates') {
           var coordinates = event['coordinates']
           var tmpCoordinate = new Array()
