@@ -10,7 +10,7 @@ var teamNames = new Array()
 const equals = (a, b) => JSON.stringify(a) === JSON.stringify(b)
 function getJsonData() {
   fetch(
-    'https://lmt.fn.sportradar.com/demolmt/en/Etc:UTC/gismo/match_timelinedelta/37786887',
+    'https://lmt.fn.sportradar.com/demolmt/en/Etc:UTC/gismo/match_timelinedelta/37564473',
   )
     .then((res) => {
       return res.json()
@@ -206,7 +206,7 @@ function getJsonData() {
       // Compare newEvents with lastEvents and push new events to gameState;
       newEvents.forEach((newEvent) => {
         let flag = 1
-        lastEvents.forEach((lastEvent) => {
+        gameState.forEach((lastEvent) => {
           if (equals(newEvent, lastEvent)) flag = 0
         })
         if (flag == 1) {

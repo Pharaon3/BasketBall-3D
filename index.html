@@ -6,7 +6,7 @@
   <title>Soccer 3D version</title>
   <meta name="title" content="Soccer SVG Test" />
   <script src="./js/controller.js"></script>
-  <script src="./js/getDataA.js"></script>
+  <script src="./js/getDataB.js"></script>
   <script src="./js/matchInfo.js"></script>
 </head>
 
@@ -31,8 +31,8 @@
       </filter>
       <defs>
         <linearGradient id="homePossession" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" style="stop-color: rgb(255, 255, 255); stop-opacity: 0;" />
-          <stop offset="100%" style="stop-color: rgb(0, 0, 0); stop-opacity: 0.5;" />
+          <stop offset="0%" style="stop-color: rgb(255, 255, 255); stop-opacity: 0.2;" />
+          <stop offset="100%" style="stop-color: rgb(0, 0, 0); stop-opacity: 0.7;" />
         </linearGradient>
         <linearGradient id="awayStateGradient" x1="0%" y1="0%" x2="100%" y2="0%">
           <stop offset="0%" style="stop-color: rgb(255, 255, 255); stop-opacity: 0;" />
@@ -47,8 +47,8 @@
           <stop offset="100%" style="stop-color: rgb(0, 255, 0); stop-opacity: 0.4;" />
         </linearGradient>
         <linearGradient id="awayPossession" x1="100%" y1="0%" x2="0%" y2="0%">
-          <stop offset="0%" style="stop-color: rgb(255, 255, 255); stop-opacity: 0;" />
-          <stop offset="100%" style="stop-color: rgb(0, 0, 0); stop-opacity: 0.5;" />
+          <stop offset="0%" style="stop-color: rgb(255, 255, 255); stop-opacity: 0.2;" />
+          <stop offset="100%" style="stop-color: rgb(0, 0, 0); stop-opacity: 0.7;" />
         </linearGradient>
         <linearGradient id="awayAttack" x1="100%" y1="0%" x2="0%" y2="0%">
           <stop offset="0%" style="stop-color: green; stop-opacity: 0;" />
@@ -98,6 +98,86 @@
         <polygon id="awayStatePolygon" points="400, 500 500, 443 707, 443 837, 597 511, 597 "
           style="fill: url(#none);" />
       </g>
+      <g id="Ball_Track_Begin">
+          <line
+            id="ballLine1"
+            x1="0"
+            y1="0"
+            x2="0"
+            y2="0"
+            style="
+              stroke: rgb(161, 227, 111);
+              stroke-width: 2;
+              stroke-opacity: 0.8;
+            "
+          />
+          <ellipse
+            id="TractDot1"
+            cx="0"
+            cy="0"
+            rx="3"
+            ry="2"
+            stroke="black"
+            stroke-width="0"
+            fill="#a1e36f"
+          />
+          <line
+            id="ballLine2"
+            x1="0"
+            y1="0"
+            x2="0"
+            y2="0"
+            style="
+              stroke: rgb(161, 227, 111);
+              stroke-width: 2;
+              stroke-opacity: 0.6;
+            "
+          />
+          <ellipse
+            id="TractDot2"
+            cx="0"
+            cy="0"
+            rx="3"
+            ry="2"
+            stroke="black"
+            stroke-width="0"
+            fill="#a1e36f"
+          />
+          <line
+            id="ballLine3"
+            x1="0"
+            y1="0"
+            x2="0"
+            y2="0"
+            style="
+              stroke: rgb(161, 227, 111);
+              stroke-width: 2;
+              stroke-opacity: 0.4;
+            "
+          />
+          <ellipse
+            id="TractDot3"
+            cx="0"
+            cy="0"
+            rx="3"
+            ry="2"
+            stroke="black"
+            stroke-width="0"
+            fill="#a1e36f"
+          />
+          <line
+            id="ballLine4"
+            x1="0"
+            y1="0"
+            x2="0"
+            y2="0"
+            style="
+              stroke: rgb(161, 227, 111);
+              stroke-width: 2;
+              stroke-opacity: 0.2;
+            "
+          />
+        </g>
       <g id="Ball_Begin">
         <polygon id="homeKickPolygon" points="500, 500 726, 476 782, 536" style="fill: url(#none);" />
         <polygon id="awayKickPolygon" points="500, 500 210, 476 160, 536" style="fill: url(#none);" />
@@ -134,8 +214,8 @@
 
         </text>
         <g id="stateLabels" transform='translate(400,500)' filter="url(#shadow)" style='display: block;'>
-          <rect id='stateRect' x="-150" y="-45" width="150" height="40" rx="20" ry="20" style="fill:black; fill-opacity: 0.5;" />
-          <circle id='jerseyCircle' cx = '-20' cy = '-25' r = '20' fill = '#000' />
+          <rect id='stateRect' x="-150" y="-45" width="150" height="40" rx="20" ry="20" fill-opacity = '0.3' fill='cyan'/>
+          <circle id='jerseyCircle' cx = '-20' cy = '-25' r = '20' fill = '#000' fill-opacity='0.4'/>
           <g id = 'stateJersey' transform = 'translate(-20, -25)'>
             <g fill="none" fill-rule="evenodd" filter="url(#shadow)" transform="scale(0.1)">
               <g transform="translate(-150, -150)">
@@ -196,10 +276,10 @@
               </g>
             </g>
           </g>
-          <text id="state" fill="#fff" font-size="14" font-family="Verdana" x="-45" y="-28" fill-opacity="0.9"
+          <text id="state" fill="#fff" font-size="14" font-family="InriaSans" x="-45" y="-28" fill-opacity="0.9"
             text-anchor="end"> State </text>
-          <text id="teamName" fill="#a1e36f" font-size="14" font-family="Verdana" x="-45" y="-12" fill-opacity="0.9"
-            text-anchor="end"> Home </text>
+          <text id="teamName" fill="#fff" font-size="14" font-family="InriaSans" x="-45" y="-12" fill-opacity="0.9"
+            text-anchor="end" font-weight="bold"> Home </text>
         </g>
         <image href="./media/goal.png" x="250" y="400" width="450" id="goalImage" style="display: none;" />
         <image href="./media/medical/bag (2).png" x="375" y="340" width="200" id="injury" style="display: none;" />
