@@ -1,7 +1,7 @@
 var homePlayerColor, awayPlayerColor, homePlayerStripesColor, awayPlayerStripesColor, homePlayerSleeveColor, awayPlayerSleeveColor
 function getMatchJsonData() {
   fetch(
-    'https://lmt.fn.sportradar.com/common/en/Etc:UTC/gismo/match_info/37564473',
+    'https://lmt.fn.sportradar.com/common/en/Etc:UTC/gismo/match_info/36490713',
   )
     .then((res) => {
       return res.json()
@@ -15,6 +15,8 @@ function getMatchJsonData() {
       document.getElementById('homeBaseColorS').setAttribute('fill', '#'+ homePlayerColor);
       document.getElementById('homeBaseColor').setAttribute('fill', '#'+ homePlayerColor);
       document.getElementById('awayBaseColor').setAttribute('fill', '#'+ awayPlayerColor);
+      document.getElementById('homeBaseColorT').setAttribute('fill', '#'+ homePlayerColor);
+      document.getElementById('awayBaseColorT').setAttribute('fill', '#'+ awayPlayerColor);
       
     })
 }

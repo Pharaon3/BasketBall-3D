@@ -98,7 +98,7 @@ function countdown() {
     let thisSecond = Math.floor(time / 1000);
     var minute = Math.floor(thisSecond / 60);
     var second = thisSecond % 60;
-    document.getElementById('time').textContent = Math.floor(minute / 10) + '' + (minute % 10) + ':' + Math.floor(second / 10) + '' + (second % 10);
+    document.getElementById('time').textContent = max(Math.floor(minute / 10), 0) + '' + max(0, (minute % 10)) + ':' + max(0, Math.floor(second / 10)) + '' + max(0, (second % 10));
   }, timeInterval)
 }
 function load() {
