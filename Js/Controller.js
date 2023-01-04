@@ -1,3 +1,5 @@
+var socket;
+
 var currentState = 0
 
 var topLeft = 243,
@@ -51,18 +53,10 @@ var isGoal
 
 function countdown() {
   var interval = setInterval(function () {
+    ttt++;
     //every 10ms
-    if (Math.floor(ttt++) % 100 == 0) {
-      // every 100ms
-      getJsonData()
-    }
     if (currentState == 0) {
       // This is very at first. Need to initialize the state and wait.
-      if (time > 60000) {
-        // about 1min
-        // time = 0
-        //Need to show that it is faild.
-      }
       if (gameState.length > 0) {
         // Need to go next
         stepInitialize()
@@ -86,12 +80,9 @@ function countdown() {
         if(gameState[currentState]['type']){
           bounceBall();
         } else {
-          // if(t < 0.5) kickBall()
-          // else bounceBall()
           kickBall()
         }
       }
-      // drawTrack()
       showState()
     }
     if(setTimer == 1) time -= timeInterval;
@@ -118,8 +109,26 @@ function load() {
   timeSet = 0;
   isGoal = 0
   setTimer = 1;
-  getMatchJsonData()
-  countdown()
+  countdown();
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const eventId = Number(urlParams.get('eventId'));
+
+  socket=new WebSocket("ws://62.112.8.78:9680");
+  socket.onopen=function(e) {
+    //socket.send(JSON.stringify({r:"authenticate", a:{key:"*******"}}));
+    socket.send(JSON.stringify({r:"subscribe_event", a:{id:eventId}}));
+  };
+
+  socket.onmessage=function(e) {
+    var data = JSON.parse(e.data);
+
+    if (data.r == 'event') {
+      // New function added for websocket. Call it.
+      handleEventData(data.d);
+    }
+  };
+
 }
 function bounceBall() {
   tt = t * 2
@@ -386,7 +395,6 @@ function showState() {
   document.getElementById('holder').textContent = ''
 
   // Goal
-  document.getElementById('score-fade-out').setAttribute('opacity', 0);
 
   // Substitution
   document.getElementById('substitutionOut').setAttribute('fill-opacity', 0)
@@ -479,16 +487,21 @@ function displayState() {
   }
   document.getElementById('stateLabels').setAttribute('transform', 'translate(' + statePositionX + ',' + statePositionY + ')');
   if(gameState[currentState]['type'] == 'goal' || gameState[currentState]['type'] == 'attempt_missed'){
-    if(gameState[currentState - 1]['Z']){
-      action()
-      document.getElementById('Ball_Begin').style.display = 'block'
-      document.getElementById('Ball_Track_Begin').style.display = 'block'
+    if(currentState > 0){
+      if(gameState[currentState - 1]['Z']){
+        action()
+        document.getElementById('Ball_Begin').style.display = 'block'
+        document.getElementById('Ball_Track_Begin').style.display = 'block'
+      }
     }
-    if(gameState[currentState - 2]['Z']){
-      action()
-      document.getElementById('Ball_Begin').style.display = 'block'
-      document.getElementById('Ball_Track_Begin').style.display = 'block'
+    if(currentState > 1){
+      if(gameState[currentState - 2]['Z']){
+        action()
+        document.getElementById('Ball_Begin').style.display = 'block'
+        document.getElementById('Ball_Track_Begin').style.display = 'block'
+      }
     }
+    
   }
   if(gameState[currentState]['type'] == 'foul' || gameState[currentState]['type'] == 'block' || gameState[currentState]['type'] == 'rebound' || gameState[currentState]['type'] == 'free_throws_awarded') action()
 }
@@ -522,3 +535,379 @@ function action() {
   document.getElementById('Ball_Begin').style.display = 'none'
   document.getElementById('Ball_Track_Begin').style.display = 'none'
 }
+function goalAnimation() {
+  // action()
+  document.getElementById('stateLabels').style.display = 'none'
+  document.getElementById('score-fade-out').style.display = 'block'
+  document.getElementById('fadeScore').style.display = 'block'
+  if(gameState[currentState]['team'] == 'home'){
+    // document.getElementById('homeBScoreFade').textContent = 5
+    // document.getElementById('homeCScoreFade').textContent = 3
+    // document.getElementById('homeAScoreFade').textContent = 8
+    document.getElementById('homeBScoreFade').textContent = homeScore - thisScore
+    document.getElementById('homeCScoreFade').textContent = thisScore
+    document.getElementById('homeAScoreFade').textContent = homeScore
+    if(gameState[currentState]['name'] == '1'){
+      document.getElementById('homeBScoreFade').setAttribute('y', 60 - 60 * t)
+      document.getElementById('homeCScoreFade').setAttribute('y', 120 - 60 * t)
+      document.getElementById('homeAScoreFade').setAttribute('y', 180)
+    }
+    if(gameState[currentState]['name'] == '2'){
+      document.getElementById('homeBScoreFade').setAttribute('y', -100)
+      document.getElementById('homeCScoreFade').setAttribute('y', 60 - 60 * t)
+      document.getElementById('homeAScoreFade').setAttribute('y', 120 - 60 * t)
+    }
+
+  }
+}
+
+
+var dob = 0
+var gameState = new Array()
+var gameType= new Array()
+var newEvents = new Array()
+var lastEvents = new Array()
+var awayteamname, hometeamname
+var homeScore, awayScore, periodlength, getDataTime
+var teamNames = new Array()
+var periodScoreH = new Array()
+var periodScoreA = new Array()
+const equals = (a, b) => JSON.stringify(a) === JSON.stringify(b)
+
+// New function added for websocket.
+function handleEventData(data) {
+
+  /*
+    data.info   => (matchinfo)
+    data.match    => match (match_timelinedelta)
+    data.events   => events (match_timelinedelta)
+  */
+
+  console.log(data);
+
+  if (data.info) {
+    handleInfoData(data);
+  }
+
+  var match = data['match']
+
+  if (match) {
+    var teams = match['teams']
+    periodlength = match['periodlength']
+    getDataTime = match['timeinfo']['remaining'] * 1000
+    setTimer = match['timeinfo']['running']
+    var hometeam = teams['home']
+    if (hometeam['name']) hometeamname = hometeam['name']
+    // document.getElementById('homeNameLabel').textContent = hometeamname
+    var awayteam = teams['away']
+    if (awayteam['name']) awayteamname = awayteam['name']
+    // document.getElementById('awayNameLabel').textContent = awayteamname
+    teamNames['home'] = hometeamname;
+    teamNames['away'] = awayteamname;
+    // hometeamname = 'This team name is longer than 16 characters'
+    if(hometeamname.length > 16){
+      teamNames['home'] = hometeamname.substr(0, 13) + '...';
+    }
+    if(awayteamname.length > 16){
+      teamNames['away'] = awayteamname.substr(0, 13) + '...';
+    }
+    document.getElementById('homeTeamName').textContent = teamNames['home']
+    document.getElementById('awayTeamName').textContent = teamNames['away']
+    document.getElementById('period').textContent = match['status']['name']
+    if(match['status']['name'] == '1st quarter') document.getElementById('period').textContent = '1st Quarter'
+    if(match['status']['name'] == '2nd quarter') document.getElementById('period').textContent = '2nd Quarter'
+    if(match['status']['name'] == '3rd quarter') document.getElementById('period').textContent = '3rd Quarter'
+    if(match['status']['name'] == '4th quarter') document.getElementById('period').textContent = '4th Quarter'
+    if(match['status']['name'] == '1st half') document.getElementById('period').textContent = '1st Half'
+    if(match['status']['name'] == '2nd half') document.getElementById('period').textContent = '2nd Half'
+
+    // Score Setting
+    var result = match['result']
+    if (result['home']) homeScore = result['home']
+    if (result['away']) awayScore = result['away']
+    // document.getElementById('score').textContent = homeScore + ':' + awayScore
+    document.getElementById('score').textContent = homeScore + ' - ' + awayScore
+    // document.getElementById('fade_score').textContent = homeScore + ' - ' + awayScore
+
+    // Period Score Setting
+    let currentPeriod = 1;
+    if(match['periods'] != null){
+      if(match['periods']['p1']){
+        document.getElementById('homeScore1').textContent = match['periods']['p1']['home']
+        document.getElementById('awayScore1').textContent = match['periods']['p1']['away']
+        currentPeriod = 2
+      }
+      else {
+        document.getElementById('homeScore1').textContent = '-'
+        document.getElementById('awayScore1').textContent = '-'
+        if(currentPeriod == 1){
+          document.getElementById('homeScore1').textContent = homeScore
+          document.getElementById('awayScore1').textContent = awayScore
+        }
+      }
+      if(match['periods']['p2']){
+        document.getElementById('homeScore2').textContent = match['periods']['p2']['home']
+        document.getElementById('awayScore2').textContent = match['periods']['p2']['away']
+        currentPeriod = 3;
+      }
+      else {
+        document.getElementById('homeScore2').textContent = '-'
+        document.getElementById('awayScore2').textContent = '-'
+        if(currentPeriod == 2){
+          document.getElementById('homeScore2').textContent = homeScore - match['periods']['p1']['home']
+          document.getElementById('awayScore2').textContent = awayScore - match['periods']['p1']['away']
+        }
+      }
+      if(match['periods']['p3']){
+        document.getElementById('homeScore3').textContent = match['periods']['p3']['home']
+        document.getElementById('awayScore3').textContent = match['periods']['p3']['away']
+        currentPeriod = 4;
+      }
+      else {
+        document.getElementById('homeScore3').textContent = '-'
+        document.getElementById('awayScore3').textContent = '-'
+        if(currentPeriod == 3){
+          document.getElementById('homeScore3').textContent = homeScore - match['periods']['p1']['home'] - match['periods']['p2']['home']
+          document.getElementById('awayScore3').textContent = awayScore - match['periods']['p1']['away'] - match['periods']['p2']['away']
+        }
+      }
+      if(match['periods']['p4']){
+        document.getElementById('homeScore4').textContent = match['periods']['p4']['home']
+        document.getElementById('awayScore4').textContent = match['periods']['p4']['away']
+      }
+      else {
+        document.getElementById('homeScore4').textContent = '-'
+        document.getElementById('awayScore4').textContent = '-'
+        if(currentPeriod == 4){
+          document.getElementById('homeScore4').textContent = homeScore - match['periods']['p1']['home'] - match['periods']['p2']['home'] - match['periods']['p3']['home']
+          document.getElementById('awayScore4').textContent = awayScore - match['periods']['p1']['away'] - match['periods']['p2']['away'] - match['periods']['p3']['away']
+        }
+      }
+    }
+    else {
+      document.getElementById('homeScore1').textContent = homeScore
+      document.getElementById('awayScore1').textContent = awayScore
+    }
+    
+    // match['numberofperiods'] == 2
+    if(match['numberofperiods'] == 2){
+      document.getElementById('homeScore3').style.display = 'none';
+      document.getElementById('homeScore4').style.display = 'none';
+      document.getElementById('awayScore3').style.display = 'none';
+      document.getElementById('awayScore4').style.display = 'none';
+      document.getElementById('homeScore1').setAttribute('x', 427)
+      document.getElementById('homeScore2').setAttribute('x', 557)
+      document.getElementById('awayScore1').setAttribute('x', 427)
+      document.getElementById('awayScore2').setAttribute('x', 557)
+
+      document.getElementById('tableName1').setAttribute('x', 427)
+      document.getElementById('tableName2').setAttribute('x', 557)
+      document.getElementById('tableName1').textContent = '1 HALF'
+      document.getElementById('tableName2').textContent = '2 HALF'
+      document.getElementById('tableName3').style.display = 'none';
+      document.getElementById('tableName4').style.display = 'none';
+    }
+    else {
+      document.getElementById('homeScore3').style.display = 'block';
+      document.getElementById('homeScore4').style.display = 'block';
+      document.getElementById('awayScore3').style.display = 'block';
+      document.getElementById('awayScore4').style.display = 'block';
+      document.getElementById('homeScore1').setAttribute('x', 395)
+      document.getElementById('homeScore2').setAttribute('x', 460)
+      document.getElementById('homeScore3').setAttribute('x', 525)
+      document.getElementById('homeScore4').setAttribute('x', 590)
+      document.getElementById('awayScore1').setAttribute('x', 395)
+      document.getElementById('awayScore2').setAttribute('x', 460)
+      document.getElementById('awayScore3').setAttribute('x', 525)
+      document.getElementById('awayScore4').setAttribute('x', 590)
+
+      document.getElementById('tableName1').setAttribute('x', 395)
+      document.getElementById('tableName2').setAttribute('x', 460)
+      document.getElementById('tableName3').setAttribute('x', 525)
+      document.getElementById('tableName4').setAttribute('x', 590)
+
+      document.getElementById('tableName1').textContent = '1 QUARTER'
+      document.getElementById('tableName2').textContent = '2 QUARTER'
+      document.getElementById('tableName3').textContent = '3 QUARTER'
+      document.getElementById('tableName4').textContent = '4 QUARTER'
+      document.getElementById('tableName3').style.display = 'block';
+      document.getElementById('tableName4').style.display = 'block';
+    }
+  }
+
+  var events = data['events'] || {};
+
+  var newEvents = new Array()
+  Object.values(events).forEach((event) => {
+    let typeFlag = 1;
+    gameType.forEach((type) => {
+      if(equals(type, event['type'])) typeFlag = 0;
+    })
+    if(typeFlag) gameType.push(event['type'])
+    if(event['seconds'] > 0 && timeSet == 0){
+      // time = event['seconds'] * 1000;
+      // timeSet = 1;
+    }
+    if(event['type'] != 'ballcoordinates') {
+      newEvents.push({name: event['name'], X: event['X'], Y: event['Y'], seconds: event['seconds'], type: event['type'], team: event['team'], points: event['points']})
+    }
+    if(event['type'] == 'goal') {
+      if (event['team'] == 'home') {
+        events1 = {X: '95', Y: '50', Z: '60'}
+        events1['team'] = 'home'
+        events1['type'] = 'goal'
+        events1['name'] = event['name']
+        events1['uts'] = event['uts']
+        events1['seconds'] = event['seconds']
+        newEvents.push(events1)
+        events2 = {X: '95', Y: '50'}
+        events2['team'] = 'home'
+        events2['type'] = 'goal'
+        events2['name'] = event['name']
+        events2['uts'] = event['uts']
+        events2['seconds'] = event['seconds']
+        newEvents.push(events2)
+        events3 = {X: '100', Y: '50'}
+        events3['team'] = 'home'
+        events3['type'] = 'goal'
+        events3['name'] = event['name']
+        events3['uts'] = event['uts']
+        events3['seconds'] = event['seconds']
+        newEvents.push(events3)
+      } 
+      else if (event['team'] == 'away') {
+        events1 = {X: '4', Y: '50', Z: '60'}
+        events1['team'] = 'away'
+        events1['type'] = 'goal'
+        events1['name'] = event['name']
+        events1['uts'] = event['uts']
+        events1['seconds'] = event['seconds']
+        newEvents.push(events1)
+
+        events2 = {X: '6', Y: '50'}
+        events2['team'] = 'away'
+        events2['type'] = 'goal'
+        events2['name'] = event['name']
+        events2['uts'] = event['uts']
+        events2['seconds'] = event['seconds']
+        newEvents.push(events2)
+
+        events3 = {X: '0', Y: '50'}
+        events3['team'] = 'away'
+        events3['type'] = 'goal'
+        events3['name'] = event['name']
+        events3['uts'] = event['uts']
+        events3['seconds'] = event['seconds']
+        newEvents.push(events3)
+      } else;
+    }
+    if(event['type'] == 'attempt_missed') {
+      if (event['team'] == 'home') {
+        events1 = {X: '97', Y: '50', Z: '60'}
+        events1['team'] = 'home'
+        events1['type'] = 'attempt_missed'
+        events1['name'] = event['name']
+        events1['uts'] = event['uts']
+        events1['seconds'] = event['seconds']
+        events1['points'] = event['points']
+        newEvents.push(events1)
+
+        events2 = {X: '80', Y: '50'}
+        events2['team'] = 'home'
+        events2['type'] = 'attempt_missed'
+        events2['name'] = event['name']
+        events2['uts'] = event['uts']
+        events2['seconds'] = event['seconds']
+        events2['points'] = event['points']
+        newEvents.push(events2)
+
+        events3 = {X: '80', Y: '50'}
+        events3['team'] = 'home'
+        events3['type'] = 'goal'
+        events3['name'] = event['name']
+        events3['uts'] = event['uts']
+        events3['seconds'] = event['seconds']
+        events3['points'] = event['points']
+        newEvents.push(events3)
+      } else if (event['team'] == 'away') {
+        events1 = {X: '3', Y: '50', Z: '60'}
+        events1['team'] = 'away'
+        events1['type'] = 'attempt_missed'
+        events1['name'] = event['name']
+        events1['uts'] = event['uts']
+        events1['seconds'] = event['seconds']
+        events1['points'] = event['points']
+        newEvents.push(events1)
+
+        events2 = {X: '20', Y: '50'}
+        events2['team'] = 'away'
+        events2['type'] = 'attempt_missed'
+        events2['name'] = event['name']
+        events2['uts'] = event['uts']
+        events2['seconds'] = event['seconds']
+        events2['points'] = event['points']
+        newEvents.push(events2)
+
+        events3 = {X: '20', Y: '50'}
+        events3['team'] = 'away'
+        events3['type'] = 'goal'
+        events3['name'] = event['name']
+        events3['uts'] = event['uts']
+        events3['seconds'] = event['seconds']
+        events3['points'] = event['points']
+        newEvents.push(events3)
+      } else;
+    }
+    if(event['type'] == 'free_throws_awarded') {
+      if (event['team'] == 'home') {
+        events1 = {X: '80', Y: '50'}
+        events1['team'] = 'home'
+        events1['type'] = 'free_throws_awarded'
+        events1['name'] = event['name']
+        events1['uts'] = event['uts']
+        events1['seconds'] = event['seconds']
+        newEvents.push(events1)
+
+      } else if (event['team'] == 'away') {
+        events1 = {X: '20', Y: '50'}
+        events1['team'] = 'away'
+        events1['type'] = 'free_throws_awarded'
+        events1['name'] = event['name']
+        events1['uts'] = event['uts']
+        events1['seconds'] = event['seconds']
+        newEvents.push(events1)
+      } else;
+    }
+    
+    if(event['type'] == 'ballcoordinates') {
+      var coordinates = event['coordinates']
+      var tmpCoordinate = new Array()
+      coordinates.slice().reverse().forEach((item) => {
+          newEvents.push(item)
+        })
+    }
+  })
+  newEvents.forEach((newEvent) => {
+    let flag = 1
+    gameState.forEach((lastEvent) => {
+      if (equals(newEvent, lastEvent)) flag = 0
+    })
+    if (flag == 1) {
+      gameState.push(newEvent)
+    }
+  })
+  lastEvents = newEvents
+}
+
+function handleInfoData(data) {
+  var data1 = data.info;
+  var jerseys = data1['jerseys']
+  homePlayerColor = jerseys['home']['player']['base']
+  awayPlayerColor = jerseys['away']['player']['base']
+  document.getElementById('homeBaseColorS').setAttribute('fill', '#'+ homePlayerColor);
+  document.getElementById('homeBaseColor').setAttribute('fill', '#'+ homePlayerColor);
+  document.getElementById('awayBaseColor').setAttribute('fill', '#'+ awayPlayerColor);
+  document.getElementById('homeBaseColorT').setAttribute('fill', '#'+ homePlayerColor);
+  document.getElementById('awayBaseColorT').setAttribute('fill', '#'+ awayPlayerColor);
+}
+
