@@ -2,6 +2,10 @@ var socket;
 
 var currentState = 0
 
+var updated_uts1 = 0, updated_uts = 0
+var currentTime, matchStartDate;
+var ptime, setTimer, stopTime = 0
+
 var topLeft = 243,
   topPosition = 443
 var pitchX = 724,
@@ -53,6 +57,33 @@ var isGoal
 
 function countdown() {
   var interval = setInterval(function () {
+    const currentDate = new Date;
+    updated_uts += timeInterval / 1000
+    if(setTimer) currentTime = updated_uts
+    else currentTime = stopTime
+    // var seconds = Math.floor(updated_uts / 1000)
+    var seconds = Math.floor(currentTime)
+    var minute = Math.floor(seconds / 60)
+    var second = seconds % 60
+    document.getElementById('time').textContent =
+      Math.floor(minute / 10) +
+      '' +
+      (minute % 10) +
+      ':' +
+      Math.floor(second / 10) +
+      '' +
+      (second % 10)
+    if(matchStartDate){
+      var seconds = Math.floor((matchStartDate - currentDate.getTime()) / 1000)
+      var second = seconds % 60
+      var minutes = Math.floor(seconds / 60)
+      var minute = minutes % 60
+      var hours = Math.floor(minutes / 60)
+      var hour = hours % 24
+      var days = Math.floor(hours / 24)
+      setCenterFrame('Not Started', days + 'D ' + hour + 'H ' + minute + 'M ' + second + 'S')
+    }
+
     ttt++;
     //every 10ms
     if (currentState == 0) {
@@ -86,7 +117,9 @@ function countdown() {
       showState()
     }
     if(setTimer == 1) time -= timeInterval;
-    let thisSecond = Math.floor(time / 1000);
+    if(setTimer) currentTime = time
+    else currentTime = getDataTime
+    let thisSecond = Math.floor(currentTime / 1000);
     var minute = Math.floor(thisSecond / 60);
     var second = thisSecond % 60;
     document.getElementById('time').textContent = max(Math.floor(minute / 10), 0) + '' + max(0, (minute % 10)) + ':' + max(0, Math.floor(second / 10)) + '' + max(0, (second % 10));
@@ -131,6 +164,7 @@ function load() {
 
 }
 function bounceBall() {
+  if(!setTimer)return
   tt = t * 2
   if(tt > 1) tt = tt - 1
   tt = t
@@ -180,6 +214,7 @@ function ballPosition() {
   ys = y_1_1 + (y_1_2 - y_1_1) * bt
 }
 function kickBall() {
+  if(!setTimer)return
   document
     .getElementById('ball')
     .setAttribute('x', x_b + w2 - ballRadius / 2 + topLeft)
@@ -198,6 +233,7 @@ function kickBall() {
   }
 }
 function drawTrack() {
+  if(!setTimer)return
   x_l = x_1_1 + (x_1_2 - x_1_1) * t
   y_l = y_1_1 + (y_1_2 - y_1_1) * t
   document.getElementById('ballLine1').setAttribute('x1', lineX[0])
@@ -310,6 +346,7 @@ function stepInitialize() {
   else isGoal = 0;
 }
 function drawRect() {
+  if(!setTimer)return
   rt = t * 2
   if (rt > 1) rt = 1
   if (gameState[currentState]['team'] == 'home') {
@@ -436,6 +473,7 @@ function mapY(x11, y11) {
   return y_11
 }
 function displayState() {
+  if(!setTimer)return
   var statePositionX, statePositionY
   document.getElementById('stateLabels').style.display = 'block'
   if(gameState[currentState]['team']) document.getElementById('teamName').textContent = teamNames[gameState[currentState]['team']].toUpperCase()
@@ -560,7 +598,26 @@ function goalAnimation() {
 
   }
 }
+function setCenterFrame(title, content) {
+  document.getElementById('stateLabels').style.display = 'none'
+  document.getElementById('center_rect').setAttribute('fill-opacity', 0.5)
+  center_text = capitalizeWords(title.split(" ")).join(' ')
+  document.getElementById('center_text').textContent = center_text
+  document.getElementById('center_rect').setAttribute('height', 140)
+  document.getElementById('bottom_text').textContent = content
+  document.getElementById('ball').setAttribute('x', 100000)
+  document.getElementById('ball').setAttribute('y', 100000)
+  document.getElementById('ball_shadow').setAttribute('cx', 100000)
+  document.getElementById('ball_shadow').setAttribute('cy', 100000)
+}
+function capitalizeWords(arr) {
+  return arr.map(word => {
+    const firstLetter = word.charAt(0).toUpperCase();
+    const rest = word.slice(1).toLowerCase();
 
+    return firstLetter + rest;
+  });
+}
 
 var dob = 0
 var gameState = new Array()
@@ -592,6 +649,10 @@ function handleEventData(data) {
   var match = data['match']
 
   if (match) {
+    setTimer = true
+    if(match['p'] == 31) setTimer = false
+    if(match['p'] == 32) setTimer = false
+    if(match['p'] == 0) setTimer = false
     var teams = match['teams']
     periodlength = match['periodlength']
     getDataTime = match['timeinfo']['remaining'] * 1000
@@ -733,6 +794,41 @@ function handleEventData(data) {
       document.getElementById('tableName3').style.display = 'block';
       document.getElementById('tableName4').style.display = 'block';
     }
+
+    if(match['status']['name'] == 'Ended'){ //Match End
+      setCenterFrame('Match End', homeScore + ' : ' + awayScore)
+    }
+    if(match['status']['name'] == 'Break'){ //Break time
+      setCenterFrame('Break', homeScore + ' : ' + awayScore)
+    }
+
+    if(match['status']['name'] == 'Not started'){ //Match End
+      const currentDate = new Date;
+      upCommingTime = currentDate.getTime() / 1000 - match['updated_uts']
+      // var seconds = Math.floor(updated_uts / 1000)
+      var seconds = Math.floor(upCommingTime)
+      var minute = Math.floor(seconds / 60)
+      var second = seconds % 60
+      // var date = new Date(match['_dt']['date'] + '4:52:48 PM UTC');
+      var matchDate = match['_dt']['date'].split("/")
+      var date = new Date(matchDate[1] + '/' + matchDate[0] + '/20' + matchDate[2] + ' ' + match['_dt']['time'] + ':00 UTC')
+
+      matchStartDate = date.getTime()
+    }
+
+    if(match['p'] == 31) {
+      setTimer = false
+      setCenterFrame('Break', homeScore + ':' + awayScore)
+    }
+    if(match['p'] == 32) {
+      setTimer = false
+      setCenterFrame('Halftime', homeScore + ':' + awayScore)
+    }
+    if(match['p'] == 33) {
+      setTimer = false
+      setCenterFrame('Break', homeScore + ':' + awayScore)
+    }
+
   }
 
   var events = data['events'] || {};
