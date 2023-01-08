@@ -1,6 +1,7 @@
 var socket;
 
 var currentState = 0
+var setTimer1 = true;
 
 var updated_uts1 = 0, updated_uts = 0
 var currentTime, matchStartDate;
@@ -57,6 +58,7 @@ var isGoal
 
 function countdown() {
   var interval = setInterval(function () {
+    changeScreenSize()
     const currentDate = new Date;
     updated_uts += timeInterval / 1000
     if(setTimer) currentTime = updated_uts
@@ -116,13 +118,20 @@ function countdown() {
       }
       showState()
     }
-    if(setTimer == 1) time -= timeInterval;
-    if(setTimer) currentTime = time
+    if(gameState.length && gameState[currentState]['type'] == 'timeout'){
+      setTimer = false
+      setCenterFrame('Time Out', teamNames[gameState[currentState]['team']])
+    }
+    time -= timeInterval;
+    if(setTimer1) currentTime = time
     else currentTime = getDataTime
     let thisSecond = Math.floor(currentTime / 1000);
     var minute = Math.floor(thisSecond / 60);
     var second = thisSecond % 60;
     document.getElementById('time').textContent = max(Math.floor(minute / 10), 0) + '' + max(0, (minute % 10)) + ':' + max(0, Math.floor(second / 10)) + '' + max(0, (second % 10));
+
+      // setTimer = true
+
   }, timeInterval)
 }
 function load() {
@@ -425,6 +434,7 @@ function drawRect() {
   }
 }
 function showState() {
+  if(!setTimer)return
   document.getElementById('actionBoard').setAttribute('width', 0)
   document.getElementById('actionBoard').setAttribute('height', 0)
   document.getElementById('stateBoardLine').setAttribute('stroke-opacity', 0)
@@ -640,7 +650,6 @@ function handleEventData(data) {
     data.events   => events (match_timelinedelta)
   */
 
-  console.log(data);
 
   if (data.info) {
     handleInfoData(data);
@@ -656,7 +665,8 @@ function handleEventData(data) {
     var teams = match['teams']
     periodlength = match['periodlength']
     getDataTime = match['timeinfo']['remaining'] * 1000
-    setTimer = match['timeinfo']['running']
+    // setTimer = match['timeinfo']['running']
+    setTimer1 = match['timeinfo']['running']
     var hometeam = teams['home']
     if (hometeam['name']) hometeamname = hometeam['name']
     // document.getElementById('homeNameLabel').textContent = hometeamname
@@ -796,9 +806,11 @@ function handleEventData(data) {
     }
 
     if(match['status']['name'] == 'Ended'){ //Match End
+      setTimer = false
       setCenterFrame('Match End', homeScore + ' : ' + awayScore)
     }
     if(match['status']['name'] == 'Break'){ //Break time
+      setTimer = false
       setCenterFrame('Break', homeScore + ' : ' + awayScore)
     }
 
@@ -1007,3 +1019,59 @@ function handleInfoData(data) {
   document.getElementById('awayBaseColorT').setAttribute('fill', '#'+ awayPlayerColor);
 }
 
+function changeScreenSize() {
+  screenHeight = window.innerHeight
+  screenWidth = window.innerWidth
+  console.log('screenWidth: ', screenWidth)
+  console.log('screenHeight: ', screenHeight)
+
+  document.getElementById('scale').setAttribute('transform', 'scale(1.5)')
+  document.getElementById('svg').setAttribute('width', 750 * 1.5)
+  document.getElementById('svg').setAttribute('height', 430 * 1.5)
+  if(screenWidth < 1150 || screenHeight < 660){
+    document.getElementById('scale').setAttribute('transform', 'scale(1.3)')
+    document.getElementById('svg').setAttribute('width', 750 * 1.3)
+    document.getElementById('svg').setAttribute('height', 430 * 1.3)
+  } 
+  if(screenWidth < 1000 || screenHeight < 570){
+    document.getElementById('scale').setAttribute('transform', 'scale(1.1)')
+    document.getElementById('svg').setAttribute('width', 750 * 1.1)
+    document.getElementById('svg').setAttribute('height', 430 * 1.1)
+  } 
+  if(screenWidth < 850 || screenHeight < 480){
+    document.getElementById('scale').setAttribute('transform', 'scale(1)')
+    document.getElementById('svg').setAttribute('width', 750 * 1)
+    document.getElementById('svg').setAttribute('height', 430 * 1)
+  } 
+  if(screenWidth < 780 || screenHeight < 450){
+    document.getElementById('scale').setAttribute('transform', 'scale(0.8)')
+    document.getElementById('svg').setAttribute('width', 750 * 0.8)
+    document.getElementById('svg').setAttribute('height', 430 * 0.8)
+  } 
+  if(screenWidth < 620 || screenHeight < 350){
+    document.getElementById('scale').setAttribute('transform', 'scale(0.6)')
+    document.getElementById('svg').setAttribute('width', 750 * 0.6)
+    document.getElementById('svg').setAttribute('height', 430 * 0.6)
+  } 
+  if(screenWidth < 470 || screenHeight < 280){
+    document.getElementById('scale').setAttribute('transform', 'scale(0.5)')
+    document.getElementById('svg').setAttribute('width', 750 * 0.5)
+    document.getElementById('svg').setAttribute('height', 430 * 0.5)
+  } 
+  if(screenWidth < 400 || screenHeight < 230){
+    document.getElementById('scale').setAttribute('transform', 'scale(0.4)')
+    document.getElementById('svg').setAttribute('width', 750 * 0.4)
+    document.getElementById('svg').setAttribute('height', 430 * 0.4)
+  } 
+  if(screenWidth < 320 || screenHeight < 190){
+    document.getElementById('scale').setAttribute('transform', 'scale(0.3)')
+    document.getElementById('svg').setAttribute('width', 750 * 0.3)
+    document.getElementById('svg').setAttribute('height', 430 * 0.3)
+  } 
+  if(screenWidth < 250 || screenHeight < 150){
+    document.getElementById('scale').setAttribute('transform', 'scale(0.2)')
+    document.getElementById('svg').setAttribute('width', 750 * 0.2)
+    document.getElementById('svg').setAttribute('height', 430 * 0.2)
+  } 
+
+}
