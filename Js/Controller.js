@@ -170,7 +170,7 @@ function load() {
       handleEventData(data.d);
     }
   };
-  document.getElementById('link').setAttribute('href', '../Basketball-2D/index.html?eventId=' + eventId)
+  document.getElementById('link').setAttribute('href', '../basketball-2d/index.html?eventId=' + eventId)
 }
 function bounceBall() {
   if(!setTimer)return
